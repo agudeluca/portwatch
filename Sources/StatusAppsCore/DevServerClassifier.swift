@@ -35,6 +35,14 @@ public enum DevServerClassifier {
             .sorted { $0.footprint > $1.footprint }
     }
 
+    /// Servers running under `root`, for an instance that should see only part of the machine —
+    /// the README screenshots are taken from servers started in a scratch directory, while the
+    /// real ones keep running alongside. A whole-component prefix, so `/a/demo` excludes `/a/demo2`.
+    public static func servers(_ servers: [DevServer], under root: String) -> [DevServer] {
+        let prefix = root.hasSuffix("/") ? root : root + "/"
+        return servers.filter { $0.workingDirectory == root || $0.workingDirectory.hasPrefix(prefix) }
+    }
+
     /// Servers bucketed by runtime, biggest group first, so a bulk action can offer "every Metro"
     /// without offering to take Postgres down with it.
     public static func groupedByKind(_ servers: [DevServer]) -> [(kind: DevServerKind, servers: [DevServer])] {
