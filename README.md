@@ -4,7 +4,7 @@ A macOS menu bar app that shows which development servers are listening, on whic
 which project, and how much memory they actually hold.
 
 <p align="center">
-  <img src="docs/images/menu.png" width="580" alt="The PortWatch menu: six development servers with their port, memory, uptime, idle time and project">
+  <img src="docs/images/hero.png" width="600" alt="Three node processes, 13.5 GB: Activity Monitor shows three identical rows with no port or project, while PortWatch shows each one's port, uptime, idle time and checkout">
 </p>
 
 ## Why
@@ -13,31 +13,23 @@ Activity Monitor showed three processes called `node`, at 4.6 GB, 4.5 GB and 4.4
 it said which port each one served or which checkout it came from. They turned out to be three
 Metro bundlers that had been running for ten days, together pushing swap to 19 GB of 20 GB.
 
-The problem was never the memory. It was that three identical rows called `node` are impossible
-to tell apart.
-
-```
-⇅3  13.5G
-──────────────────────────────────────────────────────────
-PORT    MEM    UP       IDLE     PROCESS
-:8082   4.6G   9d 22h   6d 4h    metro — shop-app/checkout-redesign
-:8081   4.5G   10d      2m       metro — shop-app/fix-pdf-export
-:8083   4.4G   9d 21h   9d 20h   metro — shop-app
-:3000   61M    48m      active   bun — api
-──────────────────────────────────────────────────────────
-▸ Recent (2)
-──────────────────────────────────────────────────────────
-Swap 10.5G / 12.0G (87%)
-```
+The problem was never the memory. It was that three identical rows called `node` leave one
+question unanswered: which one can you kill?
 
 The uptime column is what turns "three servers are running" into "three servers have been
 running for nine days". A bundler up for forty minutes is work in progress; one up for a week
 is something nobody remembered to stop.
 
-UP alone is still ambiguous, though — the first two rows have been up about as long, and only
-one of them is dead weight. IDLE is the time since the server last did measurable work, and the
-pair reads as a verdict: up nine days and untouched for six is a bundler to kill, while up ten
-days and idle two minutes is the one you are working in right now.
+UP alone is still ambiguous, though — two of those bundlers had been up about as long, and only
+one of them was dead weight. IDLE is the time since the server last did measurable work, and the
+pair reads as a verdict:
+
+- **Idle 6 days** — a bundler nobody stopped. Kill it.
+- **Idle 2 minutes** — the one you are using. Keep it.
+
+<p align="center">
+  <img src="docs/images/menu.png" width="580" alt="The PortWatch menu: six development servers with their port, memory, uptime, idle time and project">
+</p>
 
 Each row opens a submenu that opens the server in the browser and offers **Stop**, **Force kill**,
 **Clean cache**, **Rerun**, **Attach (tmux)** and **Reveal in Finder**. Entries under **Recent**
