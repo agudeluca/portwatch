@@ -12,7 +12,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     private var statusItem: NSStatusItem!
     private let menu = NSMenu()
-    private let store = KnownServersStore()
+    /// Set, the app lists only servers under this directory and keeps its state there too, so a
+    /// second instance can run beside the real one without either seeing the other's servers.
+    private static let scanRoot = ProcessInfo.processInfo.environment["STATUS_APPS_SCAN_ROOT"]
+
+    private let store = KnownServersStore(
+        fileURL: scanRoot.map { URL(fileURLWithPath: $0).appendingPathComponent("known.json") }
+    )
     private let activity = ActivityMonitor()
     private var timer: Timer?
     private var servers: [DevServer] = []
@@ -57,6 +63,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func refresh() {
         let now = Date()
         servers = DevServerClassifier.classify(ProcessScanner.scanListeningProcesses())
+        if let root = Self.scanRoot { servers = DevServerClassifier.servers(servers, under: root) }
         store.record(servers, active: activity.activeIdentities(among: servers, now: now), now: now)
         statusItem.button?.title = MenuBuilder.statusTitle(servers: servers)
     }

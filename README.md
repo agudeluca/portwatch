@@ -3,6 +3,10 @@
 A macOS menu bar app that shows which development servers are listening, on which port, from
 which project, and how much memory they actually hold.
 
+<p align="center">
+  <img src="docs/images/menu.png" width="580" alt="The Status Apps menu: six development servers with their port, memory, uptime, idle time and project">
+</p>
+
 ## Why
 
 Activity Monitor showed three processes called `node`, at 4.6 GB, 4.5 GB and 4.4 GB. Nothing in
@@ -35,8 +39,9 @@ one of them is dead weight. IDLE is the time since the server last did measurabl
 pair reads as a verdict: up nine days and untouched for six is a bundler to kill, while up ten
 days and idle two minutes is the one you are working in right now.
 
-Each row opens a submenu with **Stop**, **Clean cache**, **Rerun**, **Attach (tmux)** and the
-project directory. Entries under **Recent** show how long ago they were last seen.
+Each row opens a submenu that opens the server in the browser and offers **Stop**, **Force kill**,
+**Clean cache**, **Rerun**, **Attach (tmux)** and **Reveal in Finder**. Entries under **Recent**
+show how long ago they were last seen.
 
 ## Install
 
@@ -157,6 +162,12 @@ pure and has no dependencies; nothing else needs to change.
 
 ## Actions
 
+<p align="center">
+  <img src="docs/images/server-submenu.png" width="860" alt="A Metro bundler's submenu: open in the browser, Stop, Force kill, Clean cache, Rerun, Attach and Reveal in Finder">
+</p>
+
+<sub>Rerun and Attach are greyed out here because the machine that took the capture had no tmux.</sub>
+
 **Stop** signals the process group rather than the pid. A Metro bundler is `yarn start` spawning
 `node`; the listener is the child, so signalling only its pid leaves the parent holding the port.
 
@@ -178,7 +189,7 @@ carries each server's last-used time so IDLE survives a restart.
 
 ```sh
 make build
-make test     # 93 tests
+make test     # 94 tests
 make run      # bundle and launch without installing
 make install  # install the working tree, no clone involved
 ```
@@ -193,6 +204,14 @@ assembly.
 
 Classification and formatting are pure functions tested against fixtures captured from a real
 machine; the scanner has integration tests that open a socket and assert it finds itself.
+
+The screenshots above are real captures. Setting `STATUS_APPS_SCAN_ROOT` to a directory makes the
+app list only servers running beneath it and keep its state there, so a second instance can run
+next to the installed one without either showing the other's servers:
+
+```sh
+STATUS_APPS_SCAN_ROOT=/tmp/demo .build/release/StatusApps
+```
 
 The design is written up in
 [`docs/superpowers/specs`](docs/superpowers/specs/2026-08-30-status-apps-design.md).

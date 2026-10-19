@@ -27,6 +27,15 @@ final class DevServerClassifierTests: XCTestCase {
         XCTAssertEqual(DevServerClassifier.kind(for: Fixtures.postgres), .postgres)
     }
 
+    func testScanRootKeepsOnlyServersBeneathIt() {
+        let servers = DevServerClassifier.classify(Fixtures.all)
+        let kept = DevServerClassifier.servers(servers, under: "/Users/a/projects/shop-app")
+
+        XCTAssertFalse(kept.isEmpty)
+        XCTAssertTrue(kept.allSatisfy { $0.workingDirectory.hasPrefix("/Users/a/projects/shop-app") })
+        XCTAssertTrue(DevServerClassifier.servers(servers, under: "/Users/a/projects/shop").isEmpty)
+    }
+
     func testSortsByFootprintDescending() {
         let servers = DevServerClassifier.classify(Fixtures.all)
         XCTAssertEqual(servers.map(\.footprint), servers.map(\.footprint).sorted(by: >))
