@@ -2,11 +2,11 @@
 import PackageDescription
 
 let package = Package(
-    name: "StatusApps",
+    name: "PortWatch",
     platforms: [.macOS(.v13)],
     targets: [
-        .target(name: "StatusAppsCore"),
-        .executableTarget(name: "StatusApps", dependencies: ["StatusAppsCore"]),
-        .testTarget(name: "StatusAppsCoreTests", dependencies: ["StatusAppsCore"]),
+        .target(name: "PortWatchCore"),
+        .executableTarget(name: "PortWatch", dependencies: ["PortWatchCore"]),
+        .testTarget(name: "PortWatchCoreTests", dependencies: ["PortWatchCore"]),
     ]
 )

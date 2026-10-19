@@ -1,5 +1,5 @@
 import XCTest
-@testable import StatusAppsCore
+@testable import PortWatchCore
 
 final class FormattersTests: XCTestCase {
 
@@ -201,13 +201,13 @@ extension FormattersTests {
     func testUpdateSummaryListsTheCommitsAndTheConsequence() {
         let update = PendingUpdate(count: 2, subjects: ["Add an IDLE column", "Install in one command"])
 
-        let summary = Formatters.updateSummary(update, source: "/src/status-apps")
+        let summary = Formatters.updateSummary(update, source: "/src/portwatch")
 
         XCTAssertEqual(summary, """
         • Add an IDLE column
         • Install in one command
 
-        Rebuilds from /src/status-apps, then restarts.
+        Rebuilds from /src/portwatch, then restarts.
         """)
     }
 

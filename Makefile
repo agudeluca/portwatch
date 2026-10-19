@@ -10,21 +10,21 @@ app:
 	./scripts/bundle.sh
 
 install: app
-	@pkill -x StatusApps 2>/dev/null || true
-	rm -rf /Applications/StatusApps.app
-	cp -R StatusApps.app /Applications/
-	open /Applications/StatusApps.app
+	@pkill -x PortWatch 2>/dev/null || true
+	rm -rf /Applications/PortWatch.app
+	cp -R PortWatch.app /Applications/
+	open /Applications/PortWatch.app
 	@echo "Installed. Look for ⇅ in the menu bar."
 
 uninstall:
-	@pkill -x StatusApps 2>/dev/null || true
-	rm -rf /Applications/StatusApps.app
-	rm -rf "$(HOME)/Library/Application Support/StatusApps"
+	@pkill -x PortWatch 2>/dev/null || true
+	rm -rf /Applications/PortWatch.app
+	rm -rf "$(HOME)/Library/Application Support/PortWatch"
 
 run: app
-	@pkill -x StatusApps 2>/dev/null || true
-	open StatusApps.app
+	@pkill -x PortWatch 2>/dev/null || true
+	open PortWatch.app
 
 clean:
 	swift package clean
-	rm -rf .build StatusApps.app
+	rm -rf .build PortWatch.app

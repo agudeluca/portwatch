@@ -1,5 +1,5 @@
 import XCTest
-@testable import StatusAppsCore
+@testable import PortWatchCore
 
 /// The counters are cumulative, so every case here is about a *pair* of observations. The single
 /// reading cases — first sight, a recycled pid — are the ones where the honest answer is "unknown"

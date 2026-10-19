@@ -1,5 +1,5 @@
 import XCTest
-@testable import StatusAppsCore
+@testable import PortWatchCore
 
 final class KnownServersStoreTests: XCTestCase {
 
@@ -7,7 +7,7 @@ final class KnownServersStoreTests: XCTestCase {
 
     override func setUpWithError() throws {
         fileURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("status-apps-tests-\(UUID().uuidString)")
+            .appendingPathComponent("portwatch-tests-\(UUID().uuidString)")
             .appendingPathComponent("known.json")
     }
 

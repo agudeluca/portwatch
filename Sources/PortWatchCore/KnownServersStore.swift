@@ -21,7 +21,7 @@ public final class KnownServersStore {
         let base = FileManager.default
             .urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("Library/Application Support")
-        return base.appendingPathComponent("StatusApps/known.json")
+        return base.appendingPathComponent("PortWatch/known.json")
     }
 
     /// Updates the record for every server currently running, stamping the ones that were seen

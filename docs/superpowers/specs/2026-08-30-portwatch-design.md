@@ -1,4 +1,4 @@
-# Status Apps — design
+# PortWatch — design
 
 Date: 2026-08-30
 
@@ -34,8 +34,8 @@ by kind, and `NSMenu` gives direct control over that.
 
 The code is split into two targets so the logic can be tested without bringing up the interface:
 
-- `StatusAppsCore` — library. Scanning, classification, actions, persistence.
-- `StatusApps` — executable. Status item, menu, lifecycle.
+- `PortWatchCore` — library. Scanning, classification, actions, persistence.
+- `PortWatch` — executable. Status item, menu, lifecycle.
 
 ### Modules
 
@@ -144,7 +144,7 @@ something in use, while calling an idle one busy costs one extra window in the l
 
 ## Persistence
 
-A JSON file at `~/Library/Application Support/StatusApps/known.json` stores the last seen state
+A JSON file at `~/Library/Application Support/PortWatch/known.json` stores the last seen state
 of each server: label, kind, cwd, argv, port and the last time it was seen working. That last
 field is optional, because `load` discards a file it cannot decode: a required field would have
 silently wiped every remembered server on upgrade, taking Rerun with it. The ones no longer running show up in a

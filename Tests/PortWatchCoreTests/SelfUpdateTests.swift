@@ -1,5 +1,5 @@
 import XCTest
-@testable import StatusAppsCore
+@testable import PortWatchCore
 
 /// The check is git plumbing, so the tests drive real repositories: an origin and a clone of it in
 /// a temporary directory. Fixtures of git output would only assert that the strings were copied
@@ -14,14 +14,14 @@ final class SelfUpdateTests: XCTestCase {
         try XCTSkipIf(ServerActions.which("git") == nil, "git is not installed")
 
         root = FileManager.default.temporaryDirectory
-            .appendingPathComponent("status-apps-update-\(UUID().uuidString)")
+            .appendingPathComponent("portwatch-update-\(UUID().uuidString)")
         origin = root.appendingPathComponent("origin")
         clone = root.appendingPathComponent("clone")
         try FileManager.default.createDirectory(at: origin, withIntermediateDirectories: true)
 
         try git(["init", "--quiet", "--initial-branch=main"], in: origin)
         try git(["config", "user.email", "test@example.com"], in: origin)
-        try git(["config", "user.name", "Status Apps Tests"], in: origin)
+        try git(["config", "user.name", "PortWatch Tests"], in: origin)
         try commit("first commit", in: origin)
         try git(["clone", "--quiet", origin.path, clone.path], in: root)
     }
@@ -108,14 +108,14 @@ final class SelfUpdateTests: XCTestCase {
         let script = scripts.appendingPathComponent("install.sh")
         try """
         #!/bin/bash
-        echo "src=$STATUS_APPS_SRC"
-        echo "dest=$STATUS_APPS_DEST"
+        echo "src=$PORTWATCH_SRC"
+        echo "dest=$PORTWATCH_DEST"
         exit \(status)
         """.write(to: script, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: script.path)
     }
 
-    /// The checkout and the destination reach the script through the environment. `STATUS_APPS_SRC`
+    /// The checkout and the destination reach the script through the environment. `PORTWATCH_SRC`
     /// in particular is what makes it fetch and reset rather than rebuild the code already
     /// installed, so an update that silently dropped it would appear to do nothing.
     func testTheScriptIsToldWhichCheckoutToBuildAndWhereToInstallIt() throws {

@@ -1,5 +1,5 @@
 import AppKit
-import StatusAppsCore
+import PortWatchCore
 
 /// What the menu can ask the app to do. Passed in rather than reached for, so the builder stays
 /// a pure function of its inputs and never touches the system itself.

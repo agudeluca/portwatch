@@ -1,5 +1,5 @@
 import XCTest
-@testable import StatusAppsCore
+@testable import PortWatchCore
 
 final class LabelTests: XCTestCase {
 

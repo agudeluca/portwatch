@@ -1,5 +1,5 @@
 import XCTest
-@testable import StatusAppsCore
+@testable import PortWatchCore
 
 final class DevServerClassifierTests: XCTestCase {
 
@@ -108,7 +108,7 @@ extension DevServerClassifierTests {
         let process = Fixtures.process(
             executablePath: "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python",
             arguments: ["python3", "-m", "http.server", "8099"],
-            workingDirectory: "/Users/a/projects/status-apps",
+            workingDirectory: "/Users/a/projects/portwatch",
             ports: [8099]
         )
 

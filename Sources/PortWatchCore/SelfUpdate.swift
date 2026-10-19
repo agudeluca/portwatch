@@ -39,7 +39,7 @@ public enum SelfUpdate {
     /// The checkout this bundle was built from, stamped into `Info.plist` by `scripts/bundle.sh`.
     /// Absent when the binary runs straight out of `swift build`, where there is no bundle.
     public static var bundledSourcePath: String? {
-        guard let path = Bundle.main.object(forInfoDictionaryKey: "StatusAppsSourcePath") as? String,
+        guard let path = Bundle.main.object(forInfoDictionaryKey: "PortWatchSourcePath") as? String,
               !path.isEmpty
         else { return nil }
         return path
@@ -104,7 +104,7 @@ public enum SelfUpdate {
     /// reopens the copy it just wrote. The caller holds the returned process so it stays alive
     /// long enough to report a failure, which is the only outcome the app survives to see.
     ///
-    /// `STATUS_APPS_SRC` is what makes the script fetch and reset instead of building the tree as
+    /// `PORTWATCH_SRC` is what makes the script fetch and reset instead of building the tree as
     /// it stands — run from a checkout it would otherwise rebuild the code already installed.
     public static func apply(
         in source: String,
@@ -124,8 +124,8 @@ public enum SelfUpdate {
         process.executableURL = URL(fileURLWithPath: "/bin/zsh")
         process.arguments = ["-l", "-c", ServerActions.shellQuote(script)]
         var environment = ProcessInfo.processInfo.environment
-        environment["STATUS_APPS_SRC"] = source
-        environment["STATUS_APPS_DEST"] = destination
+        environment["PORTWATCH_SRC"] = source
+        environment["PORTWATCH_DEST"] = destination
         process.environment = environment
         process.standardOutput = log
         process.standardError = log

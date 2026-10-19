@@ -1,6 +1,6 @@
 .build/
 .swiftpm/
 *.xcodeproj
-StatusApps.app/
+PortWatch.app/
 DerivedData/
 .DS_Store

@@ -1,6 +1,6 @@
 import Darwin
 import XCTest
-@testable import StatusAppsCore
+@testable import PortWatchCore
 
 /// Integration tests: they run against the live system rather than fixtures, because the point of
 /// the scanner is that it agrees with what the kernel actually reports.

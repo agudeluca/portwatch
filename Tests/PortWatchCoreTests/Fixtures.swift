@@ -1,5 +1,5 @@
 import Foundation
-@testable import StatusAppsCore
+@testable import PortWatchCore
 
 /// Captured from a real machine: the three Metro bundlers that prompted this app, alongside the
 /// other processes that were listening at the same time and must stay out of the list.

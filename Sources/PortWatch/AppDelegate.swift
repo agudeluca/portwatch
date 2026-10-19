@@ -1,6 +1,6 @@
 import AppKit
 import ServiceManagement
-import StatusAppsCore
+import PortWatchCore
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
@@ -14,7 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let menu = NSMenu()
     /// Set, the app lists only servers under this directory and keeps its state there too, so a
     /// second instance can run beside the real one without either seeing the other's servers.
-    private static let scanRoot = ProcessInfo.processInfo.environment["STATUS_APPS_SCAN_ROOT"]
+    private static let scanRoot = ProcessInfo.processInfo.environment["PORTWATCH_SCAN_ROOT"]
 
     private let store = KnownServersStore(
         fileURL: scanRoot.map { URL(fileURLWithPath: $0).appendingPathComponent("known.json") }
@@ -214,7 +214,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         else { return }
 
         let alert = NSAlert()
-        alert.messageText = "Update Status Apps?"
+        alert.messageText = "Update PortWatch?"
         alert.informativeText = Formatters.updateSummary(update, source: source)
         alert.addButton(withTitle: "Cancel")
         alert.addButton(withTitle: "Update")

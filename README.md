@@ -1,10 +1,10 @@
-# Status Apps
+# PortWatch
 
 A macOS menu bar app that shows which development servers are listening, on which port, from
 which project, and how much memory they actually hold.
 
 <p align="center">
-  <img src="docs/images/menu.png" width="580" alt="The Status Apps menu: six development servers with their port, memory, uptime, idle time and project">
+  <img src="docs/images/menu.png" width="580" alt="The PortWatch menu: six development servers with their port, memory, uptime, idle time and project">
 </p>
 
 ## Why
@@ -46,12 +46,12 @@ show how long ago they were last seen.
 ## Install
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/agudeluca/status-apps/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/agudeluca/portwatch/main/scripts/install.sh | bash
 ```
 
-Clones the repo into `~/.local/share/status-apps`, builds the app, copies it to `/Applications`
+Clones the repo into `~/.local/share/portwatch`, builds the app, copies it to `/Applications`
 and launches it. Look for `⇅` in the menu bar. The same command run again updates an existing
-install, and `~/.local/share/status-apps/scripts/install.sh --uninstall` removes the app, its
+install, and `~/.local/share/portwatch/scripts/install.sh --uninstall` removes the app, its
 stored state and the checkout.
 
 It builds on the machine rather than downloading a binary. The bundle is signed ad-hoc, and an
@@ -93,7 +93,7 @@ menu draws the last answer rather than waiting for a new one, and a failed check
 **Update failed** row that retries when chosen rather than a silence. An update is offered only
 while the checkout is clean, since installing resets it — with uncommitted changes in it the row
 says so and stays disabled. A build that fails leaves the end of
-`~/Library/Application Support/StatusApps/update.log` in the tooltip; a build that succeeds takes
+`~/Library/Application Support/PortWatch/update.log` in the tooltip; a build that succeeds takes
 the app down mid-way and reopens the copy it just wrote, which is why the confirmation says so.
 
 ## How it works
@@ -157,7 +157,7 @@ Everything else — `adb`, `wineserver`, Logitech's agents, `rapportd`, Control 
 because it was never on the list, so no exclusion list needs maintaining.
 
 To add a runtime, edit `allowedExecutables` or `toolMarkers` in
-[`DevServerClassifier.swift`](Sources/StatusAppsCore/DevServerClassifier.swift). That file is
+[`DevServerClassifier.swift`](Sources/PortWatchCore/DevServerClassifier.swift). That file is
 pure and has no dependencies; nothing else needs to change.
 
 ## Actions
@@ -182,7 +182,7 @@ the port because one directory can host several servers.
 
 **Recent** lists servers seen before that are no longer running, so Rerun can bring back
 something that has already died — the case where it is actually useful. This is the app's only
-persistent state, kept in `~/Library/Application Support/StatusApps/known.json`, which also
+persistent state, kept in `~/Library/Application Support/PortWatch/known.json`, which also
 carries each server's last-used time so IDLE survives a restart.
 
 ## Development
@@ -197,7 +197,7 @@ make install  # install the working tree, no clone involved
 `scripts/install.sh` does the same from a checkout — it builds the tree it sits in rather than
 cloning, so the one-command install and a local one take the same path.
 
-`StatusAppsCore` holds the logic and has no AppKit dependency, so it is tested directly. That
+`PortWatchCore` holds the logic and has no AppKit dependency, so it is tested directly. That
 includes the row layout: `Formatters.serverRow` composes the aligned columns, so column drift is
 caught by a test rather than noticed in the menu. `MenuBuilder` is left with nothing but `NSMenu`
 assembly.
@@ -205,16 +205,16 @@ assembly.
 Classification and formatting are pure functions tested against fixtures captured from a real
 machine; the scanner has integration tests that open a socket and assert it finds itself.
 
-The screenshots above are real captures. Setting `STATUS_APPS_SCAN_ROOT` to a directory makes the
+The screenshots above are real captures. Setting `PORTWATCH_SCAN_ROOT` to a directory makes the
 app list only servers running beneath it and keep its state there, so a second instance can run
 next to the installed one without either showing the other's servers:
 
 ```sh
-STATUS_APPS_SCAN_ROOT=/tmp/demo .build/release/StatusApps
+PORTWATCH_SCAN_ROOT=/tmp/demo .build/release/PortWatch
 ```
 
 The design is written up in
-[`docs/superpowers/specs`](docs/superpowers/specs/2026-08-30-status-apps-design.md).
+[`docs/superpowers/specs`](docs/superpowers/specs/2026-08-30-portwatch-design.md).
 
 ## License
 
