@@ -49,7 +49,9 @@ enum MenuBuilder {
         if context.servers.isEmpty {
             menu.addItem(NSMenuItem.label("No dev servers listening"))
         } else {
-            menu.addItem(NSMenuItem.label(Formatters.serverRowHeader))
+            let header = NSMenuItem.label(Formatters.serverRowHeader)
+            header.attributedTitle = MenuTheme.header(Formatters.serverRowHeader)
+            menu.addItem(header)
             for server in context.servers {
                 menu.addItem(serverItem(server, context: context, actions: actions))
             }
@@ -101,10 +103,11 @@ enum MenuBuilder {
     private static func serverItem(
         _ server: DevServer, context: MenuContext, actions: MenuActions
     ) -> NSMenuItem {
+        let lastUsed = context.lastUsed[server.identity]
         let item = NSMenuItem(
-            title: Formatters.serverRow(server, lastUsed: context.lastUsed[server.identity]),
-            action: nil, keyEquivalent: ""
-        ).monospaced()
+            title: Formatters.serverRow(server, lastUsed: lastUsed), action: nil, keyEquivalent: ""
+        )
+        item.attributedTitle = MenuTheme.row(Formatters.serverRowSegments(server, lastUsed: lastUsed))
         item.submenu = serverSubmenu(server, context: context, actions: actions)
         return item
     }

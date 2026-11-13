@@ -129,6 +129,30 @@ extension FormattersTests {
         }
     }
 
+    func testRowSegmentsJoinToThePlainRow() {
+        let started = Fixtures.metroInWorktree.startedAt
+        let now = started.addingTimeInterval(9 * 86_400 + 22 * 3_600)
+        let lastUsed = now.addingTimeInterval(-(6 * 86_400 + 4 * 3_600))
+
+        let segments = Formatters.serverRowSegments(metro, lastUsed: lastUsed, now: now)
+
+        XCTAssertEqual(
+            segments.map(\.text).joined(),
+            Formatters.serverRow(metro, lastUsed: lastUsed, now: now),
+            "colouring the row must not change a single character of it"
+        )
+        XCTAssertEqual(segments.map(\.role), [.port, .memory, .uptime, .idle(.stale), .process])
+    }
+
+    func testIdleVerdictSeparatesTheServerInUseFromTheForgottenOne() {
+        let now = Date(timeIntervalSince1970: 1_788_000_000)
+
+        XCTAssertEqual(Formatters.idleVerdict(since: nil, now: now), .unknown)
+        XCTAssertEqual(Formatters.idleVerdict(since: now.addingTimeInterval(-120), now: now), .inUse)
+        XCTAssertEqual(Formatters.idleVerdict(since: now.addingTimeInterval(-3 * 3_600), now: now), .quiet)
+        XCTAssertEqual(Formatters.idleVerdict(since: now.addingTimeInterval(-86_400), now: now), .stale)
+    }
+
     func testIdleIsUnknownUntilTheServerHasBeenWatched() {
         XCTAssertEqual(
             Formatters.idle(since: nil), "—",
