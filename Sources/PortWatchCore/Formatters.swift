@@ -54,6 +54,35 @@ public enum Formatters {
         pad("PORT", to: portColumn) + pad("MEM", to: memoryColumn)
         + pad("UP", to: uptimeColumn) + pad("IDLE", to: idleColumn) + "PROCESS"
 
+    /// What a piece of a row is, so the menu can colour it without re-parsing the string.
+    public enum RowRole: Equatable {
+        case port, memory, uptime, idle(IdleVerdict), process
+    }
+
+    public struct RowSegment: Equatable {
+        public let text: String
+        public let role: RowRole
+    }
+
+    /// How an IDLE reading should be read at a glance.
+    public enum IdleVerdict: Equatable {
+        /// Not watched across two scans yet.
+        case unknown
+        /// Did work within the last hour: the one you are using.
+        case inUse
+        /// Quiet for a while, not long enough to call it forgotten.
+        case quiet
+        /// Untouched for a day or more: what nobody remembered to stop.
+        case stale
+    }
+
+    public static func idleVerdict(since lastUsed: Date?, now: Date = Date()) -> IdleVerdict {
+        guard let lastUsed else { return .unknown }
+        let interval = now.timeIntervalSince(lastUsed)
+        if interval < 3_600 { return .inUse }
+        return interval < 86_400 ? .quiet : .stale
+    }
+
     /// One aligned row: port, memory, how long it has been up, how long since it did anything,
     /// and what it is.
     ///
@@ -63,12 +92,25 @@ public enum Formatters {
     public static func serverRow(
         _ server: DevServer, lastUsed: Date? = nil, now: Date = Date()
     ) -> String {
+        serverRowSegments(server, lastUsed: lastUsed, now: now).map(\.text).joined()
+    }
+
+    /// The same row as `serverRow`, split into its columns. Padding stays inside each segment so
+    /// the joined text is exactly the plain row.
+    public static func serverRowSegments(
+        _ server: DevServer, lastUsed: Date? = nil, now: Date = Date()
+    ) -> [RowSegment] {
         let port = server.primaryPort.map { ":\($0)" } ?? "—"
-        return pad(port, to: portColumn)
-            + pad(memory(server.footprint), to: memoryColumn)
-            + pad(uptime(server.uptime(at: now)), to: uptimeColumn)
-            + pad(idle(since: lastUsed, now: now), to: idleColumn)
-            + "\(server.kind.displayName) — \(server.label)"
+        return [
+            RowSegment(text: pad(port, to: portColumn), role: .port),
+            RowSegment(text: pad(memory(server.footprint), to: memoryColumn), role: .memory),
+            RowSegment(text: pad(uptime(server.uptime(at: now)), to: uptimeColumn), role: .uptime),
+            RowSegment(
+                text: pad(idle(since: lastUsed, now: now), to: idleColumn),
+                role: .idle(idleVerdict(since: lastUsed, now: now))
+            ),
+            RowSegment(text: "\(server.kind.displayName) — \(server.label)", role: .process),
+        ]
     }
 
     /// How long since the server last did measurable work.
