@@ -147,6 +147,20 @@ public enum Formatters {
         return "Swap \(memory(usage.used)) / \(memory(usage.total)) (\(percent)%)"
     }
 
+    /// Milliwatts as watts with one decimal: 7695 → `7.7 W`.
+    public static func watts(milliwatts: Int) -> String {
+        String(format: "%.1f W", Double(milliwatts) / 1000)
+    }
+
+    /// `Power 7.7 W · on battery`, or with the charger's rating when one is plugged in. A charger
+    /// too weak for the load is called out, since "plugged in" otherwise reads as "fine".
+    public static func power(_ reading: PowerReading) -> String {
+        let load = "Power \(watts(milliwatts: reading.systemLoad))"
+        guard reading.externalConnected else { return load + " · on battery" }
+        let charger = reading.adapterWatts.map { "charger \($0) W" } ?? "charger"
+        return load + " · " + charger + (reading.isDrainingOnCharger ? ", battery draining" : "")
+    }
+
     // MARK: - Updates
 
     /// The count carries the weight here: "update available" says nothing about whether it is a

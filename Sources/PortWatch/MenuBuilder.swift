@@ -24,6 +24,7 @@ struct MenuContext {
     var servers: [DevServer]
     var recent: [KnownServer]
     var swap: SwapUsage?
+    var power: PowerReading? = nil
     var tmuxAvailable: Bool
     var launchAtLogin: Bool?
     /// When each running server was last seen doing work, keyed by identity. Absent means the app
@@ -66,13 +67,18 @@ enum MenuBuilder {
             menu.addItem(recentItem(context.recent, tmuxAvailable: context.tmuxAvailable, actions: actions))
         }
 
-        if let swap = context.swap {
+        if context.swap != nil || context.power != nil {
             menu.addItem(.separator())
+        }
+        if let swap = context.swap {
             let critical = swap.fraction >= 0.8
             menu.addItem(NSMenuItem.label(
                 Formatters.swap(swap),
                 color: critical ? .systemRed : .secondaryLabelColor
             ))
+        }
+        if let power = context.power {
+            menu.addItem(NSMenuItem.label(Formatters.power(power), color: .secondaryLabelColor))
         }
 
         menu.addItem(.separator())

@@ -78,6 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             servers: servers,
             recent: store.recentlyStopped(excluding: servers),
             swap: SystemMemory.swapUsage(),
+            power: SystemPower.reading(),
             tmuxAvailable: ServerActions.tmuxPath != nil,
             launchAtLogin: launchAtLoginState(),
             lastUsed: lastUsed,
