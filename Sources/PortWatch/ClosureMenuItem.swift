@@ -35,12 +35,4 @@ extension NSMenuItem {
         item.attributedTitle = NSAttributedString(string: title, attributes: attributes)
         return item
     }
-
-    func monospaced() -> NSMenuItem {
-        attributedTitle = NSAttributedString(
-            string: title,
-            attributes: [.font: NSFont.monospacedSystemFont(ofSize: 12, weight: .regular)]
-        )
-        return self
-    }
 }
